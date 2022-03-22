@@ -1,4 +1,3 @@
-
 class Order:
         def __init__(self, quantity, price, buy=True):
                 self.__quantity = quantity
@@ -11,12 +10,12 @@ class Order:
 class Book:
         def __init__(self,name):
                 self.orders=[]
-		self.name = name
+                self.name = name
 
         def insert_buy (self,quantity_order,price_order):
-                order=Order(quantity_order,price_order,buy=True)
+                order=Order(self,quantity_order,price_order,True)
                 self.orders.append(order)
 
-	def insert_sell(self, quantity_order, price_order):
-		order = Order(self, quantity_order, price_order, buy =False)
-		self.orders.append(order)
+        def insert_sell(self, quantity_order, price_order):
+                order = Order(self, quantity_order, price_order, False)
+                self.orders.append(order)
