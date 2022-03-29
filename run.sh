@@ -1,4 +1,4 @@
-
+#!/bin/bash
 
 if [[ -d ./.venv ]]
 then
