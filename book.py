@@ -1,22 +1,13 @@
-
-class Order:
-        def __init__(self, quantity, price, buy=True):
-                self.__quantity = quantity
-                self.price = price
-                self.buy = buy
-        def quantity(self):
-                return self.__quantity if self.buy else -self.__quantity
+class Deal:
+    def __init__(self, quantity, price, book_name):
+  
+        self.quantity = quantity
+        self.price = price
+        self.book_name = book_name
 
 
-class Book:
-        def __init__(self,name):
-                self.orders=[]
-		self.name = name
-
-        def insert_buy (self,quantity_order,price_order):
-                order=Order(quantity_order,price_order,buy=True)
-                self.orders.append(order)
-
-	def insert_sell(self, quantity_order, price_order):
-		order = Order(self, quantity_order, price_order, buy =False)
-		self.orders.append(order)
+    def get_price(self):
+        return self.price
+    
+    def __str__(self):
+        return 'Execute the deal of quantity {quantity} at {price} dollars on {book}'.format(quantity=self.quantity, price=self.price,book=self.book_name)
