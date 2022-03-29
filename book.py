@@ -1,4 +1,4 @@
-class Deal:
+class Intermediare:
     def __init__(self, quantity, price, book_name):
   
         self.quantity = quantity
