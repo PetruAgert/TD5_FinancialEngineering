@@ -2,6 +2,9 @@ import pandas as pd
 
 import itertools
 
+if name == "main":
+    main()
+
 class Intermediaire:
     def __init__(self, quantity, price, book_name):
   
