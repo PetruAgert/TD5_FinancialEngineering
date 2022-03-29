@@ -2,6 +2,10 @@ import pandas as pd
 
 import itertools
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 850a47531141d1aaa18f095ce0888d098f160d52
 class Intermediaire:
     def __init__(self, quantity, price, book_name):
   
