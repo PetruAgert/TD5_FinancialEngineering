@@ -30,12 +30,32 @@ class Book:
     
     
 class Order:
+    nb_id = itertools.count(1)  
 
-    def __init__(self,quantite,ID, prix, type_ordre):
-        self.quantite=quantite
-        self.prix=prix
-        self.ID=ID
-        self.type_ordre=type_ordre
+    def __init__(self, quantity, price, type):
+        self.quantity = quantity
+        self.price = price
+        self.type = type.upper()
+        self.id = next(self.nb_id)  
+
+    def get_quantity(self):
+        return self.quantity
+
+    def get_price(self):
+        return self.price
+
+    def set_quantity(self, quantity):
+        self.quantity = quantity
+        
+    def get_id(self):
+        return self.id
+    
+    def __str__(self):  
+        return self.type.upper() + " %s@%s id=%s" % (self.quantity, self.price, self.id)
+    def __lt__(self, other):   
+        return self.price <= other.price
+    def __eq__(self, other):
+        return ((self.quantity == other.quantity) and (self.price == other.price))
     
 
 
