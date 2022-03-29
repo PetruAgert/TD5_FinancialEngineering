@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from book import Book
+import pandas as pd
 def main():
 	book = Book("TEST")
 	book.insert_buy(10, 10.0)
