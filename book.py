@@ -1,20 +1,18 @@
 import pandas as pd
 
 import itertools
-
-class Deal:
+if name == "main":
+    main()
+class Intermediaire:
     def __init__(self, quantity, price, book_name):
   
         self.quantity = quantity
         self.price = price
         self.book_name = book_name
 
-
-    def get_price(self):
-        return self.price
     
     def __str__(self):
-        return 'Execute the deal of {quantity} at {price} on {book}'.format(quantity=self.quantity, price=self.price,book=self.book_name)
+        return 'Execute the deal of quantity {quantity} at {price} dollars on {book}'.format(quantity=self.quantity, price=self.price,book=self.book_name)
 
 class Order:
     nb_of_id = itertools.count(1)  
@@ -26,18 +24,7 @@ class Order:
         self.type = type_of_order.upper()
         self.id = next(self.nb_of_id)  
 
-    def get_qty(self):
-        return self.quantity
 
-    def get_price(self):
-        return self.price
-
-    def set_qty(self, quantity):
-        self.quantity = quantity
-        
-    def get_id(self):
-        return self.id
-    
     def __str__(self):  
         return self.type.upper() + " %s@%s id=%s" % (self.quantity, self.price, self.id)
     def __lt__(self, other):
@@ -49,7 +36,8 @@ class Order:
     def __eq__(self, other):
 
         return (self.quantity, self.price) == (other.quantity, other.price)
- 
+    def set_qty(self, newq):
+        self.quantity = newq
 
 class Book:
     def __init__(self, name='Default order book', buy_orders=[], sell_orders=[], execute_deals=[]):
@@ -65,22 +53,16 @@ class Book:
         
         sell_order = Order(quantity, price, type_of_order='sell')
 
-        if quantity != 0:
-            self.sell_orders.append(sell_order)
-            self.sell_orders.sort()
-            print('--- Insert {order} on {book}'.format(order=sell_order.__str__(), book=self.name))
-
         while len(self.buy_orders) != 0 and self.buy_orders[
-            0].get_price() >= sell_order.get_price() and sell_order.get_qty() > 0:
+            0].price >= sell_order.price and sell_order.quantity > 0:
 
             
-            if sell_order.get_qty() > self.buy_orders[0].get_qty():
-                deal = Deal(self.buy_orders[0].get_qty(), self.buy_orders[0].get_price(), self.name)
+            if sell_order.quantity > self.buy_orders[0].quantity:
+                deal = Intermediaire(self.buy_orders[0].quantity, self.buy_orders[0].price, self.name)
                 self.execute_deals.append(deal)
 
-                new_qty = sell_order.get_qty() - self.buy_orders[0].get_qty()
+                new_qty = sell_order.quantity - self.buy_orders[0].quantity
 
-                # Fill the first buy order
                 self.buy_orders.remove(self.buy_orders[0])
 
                 sell_order.set_qty(new_qty)
@@ -88,18 +70,18 @@ class Book:
 
             
             else:
-                deal = Deal(sell_order.get_qty(), self.buy_orders[0].get_price(), self.name)
+                deal = Intermediaire(sell_order.quantity, self.buy_orders[0].price, self.name)
                 self.execute_deals.append(deal)
 
                 
-                self.buy_orders[0].set_qty(self.buy_orders[0].get_qty() - sell_order.get_qty())
+                self.buy_orders[0].set_qty(self.buy_orders[0].quantity - sell_order.quantity)
 
                 sell_order.set_qty(0)
 
-                if self.buy_orders[0].get_qty() == 0:
+                if self.buy_orders[0].quantity == 0:
                     self.buy_orders.remove(self.buy_orders[0])
 
-                self.sell_orders.remove(self.sell_orders[0])
+                    self.sell_orders.remove(self.sell_orders[0])
 
                 print(deal.__str__())
 
@@ -119,14 +101,14 @@ class Book:
             print('--- Insert {order} on {book}'.format(order=buy_order.__str__(), book=self.name))
 
         while len(self.sell_orders) != 0 and self.sell_orders[
-            0].get_price() <= buy_order.get_price() and buy_order.get_qty() > 0:
+            0].price <= buy_order.price and buy_order.quantity > 0:
 
             
-            if buy_order.get_qty() > self.sell_orders[0].get_qty():
-                deal = Deal(self.sell_orders[0].get_qty(), self.sell_orders[0].get_price(), self.name)
+            if buy_order.quantity > self.sell_orders[0].quantity:
+                deal = Intermediaire(self.sell_orders[0].quantity, self.sell_orders[0].price, self.name)
                 self.execute_deals.append(deal)
 
-                new_qty = buy_order.get_qty() - self.sell_orders[0].get_qty()
+                new_qty = buy_order.quantity - self.sell_orders[0].quantity
 
                 
                 self.sell_orders.remove(self.sell_orders[0])
@@ -136,17 +118,14 @@ class Book:
 
            
             else:
-                deal = Deal(buy_order.get_qty(), self.sell_orders[0].get_price(), self.name)
+                deal = Intermediaire(buy_order.quantity, self.sell_orders[0].price, self.name)
                 self.execute_deals.append(deal)
-
-                # Update of the new quantity
-                self.sell_orders[0].set_qty(self.sell_orders[0].get_qty() - buy_order.get_qty())
-
+                self.sell_orders[0].set_qty(self.sell_orders[0].quantity - buy_order.quantity)
                 buy_order.set_qty(0)
 
                 self._buy_orders.remove(self._buy_orders[0])
 
-                if self.sell_orders[0].get_qty() == 0:
+                if self.sell_orders[0].quantity == 0:
                     self.sell_orders.remove(self.sell_orders[0])
 
                 print(deal.__str__())
@@ -159,12 +138,6 @@ class Book:
      
         self._execute_deals.append(deal)
         return None
-
-    def get_sell_order(self):
-        return self._sell_orders
-
-    def get_buy_orders(self):
-        return self._buy_orders
 
     def get_status(self):
       
